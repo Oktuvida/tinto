@@ -74,17 +74,17 @@ description: "Task list template for feature implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T019 [P] [US1] Create issuer entity in backend/src/main/kotlin/domain/billing/Issuer.kt
-- [ ] T020 [P] [US1] Create customer entity in backend/src/main/kotlin/domain/billing/Customer.kt
-- [ ] T021 [P] [US1] Create invoice entity in backend/src/main/kotlin/domain/billing/Invoice.kt
-- [ ] T022 [P] [US1] Create line item entity in backend/src/main/kotlin/domain/billing/LineItem.kt
-- [ ] T023 [P] [US1] Create DIAN submission entity in backend/src/main/kotlin/domain/billing/DianSubmission.kt
-- [ ] T024 [US1] Implement invoice repository in backend/src/main/kotlin/services/invoice/InvoiceRepository.kt
-- [ ] T025 [US1] Implement UBL XML builder in backend/src/main/kotlin/services/dian/UblXmlBuilder.kt
-- [ ] T026 [US1] Implement CUFE/CUDE calculator in backend/src/main/kotlin/services/dian/CufeCalculator.kt
-- [ ] T027 [US1] Implement XAdES-EPES signer in backend/src/main/kotlin/services/dian/XmlSigner.kt
-- [ ] T028 [US1] Implement ZIP packager in backend/src/main/kotlin/services/dian/ZipPackager.kt
-- [ ] T029 [US1] Implement DIAN send flow in backend/src/main/kotlin/services/dian/DianSubmissionService.kt
+- [x] T019 [P] [US1] Create issuer entity in backend/src/main/kotlin/domain/billing/Issuer.kt
+- [x] T020 [P] [US1] Create customer entity in backend/src/main/kotlin/domain/billing/Customer.kt
+- [x] T021 [P] [US1] Create invoice entity in backend/src/main/kotlin/domain/billing/Invoice.kt
+- [x] T022 [P] [US1] Create line item entity in backend/src/main/kotlin/domain/billing/LineItem.kt
+- [x] T023 [P] [US1] Create DIAN submission entity in backend/src/main/kotlin/domain/billing/DianSubmission.kt
+- [x] T024 [US1] Implement invoice repository in backend/src/main/kotlin/repository/Repositories.kt
+- [x] T025 [US1] Implement UBL XML builder in backend/src/main/kotlin/services/dian/UblXmlBuilder.kt
+- [x] T026 [US1] Implement CUFE/CUDE calculator in backend/src/main/kotlin/services/dian/CufeCalculator.kt
+- [x] T027 [US1] Implement XAdES-EPES signer in backend/src/main/kotlin/services/dian/XmlSigner.kt
+- [x] T028 [US1] Implement ZIP packager in backend/src/main/kotlin/services/dian/ZipPackager.kt
+- [x] T029 [US1] Implement DIAN send flow in backend/src/main/kotlin/services/dian/DianSubmissionService.kt
 - [ ] T030 [US1] Implement invoice issuance service in backend/src/main/kotlin/services/invoice/InvoiceService.kt
 - [ ] T031 [US1] Implement POST /v1/invoices in backend/src/main/kotlin/api/InvoiceController.kt
 - [ ] T032 [P] [US1] Create invoice form page in frontend/src/pages/invoices/new-invoice.component.ts

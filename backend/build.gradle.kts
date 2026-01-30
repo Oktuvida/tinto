@@ -10,7 +10,11 @@ plugins {
 
 group = "com.tinto"
 version = "0.1.0-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_25
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 configurations {
     compileOnly {
@@ -20,9 +24,16 @@ configurations {
 
 repositories {
     mavenCentral()
+    // Shibboleth repository for OpenSAML dependencies (required by WSS4J)
+    maven {
+        url = uri("https://build.shibboleth.net/maven/releases/")
+    }
 }
 
 dependencies {
+    // Fix Guava transitive dependency issues
+    implementation(platform("com.google.guava:guava-bom:33.4.0-jre"))
+    
     // Spring Boot Starters
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -43,6 +54,7 @@ dependencies {
     // SOAP & XML Processing
     implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:4.0.5") // Apache CXF for SOAP
     implementation("org.apache.cxf:cxf-rt-ws-security:4.0.5") // WS-Security support
+    implementation("org.apache.cxf:cxf-rt-features-logging:4.0.5") // Logging feature for CXF
     implementation("javax.xml.soap:javax.xml.soap-api:1.4.0")
     implementation("com.sun.xml.messaging.saaj:saaj-impl:3.0.4")
     
@@ -74,9 +86,9 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "25"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
@@ -84,9 +96,4 @@ tasks.withType<Test> {
     useJUnitPlatform()
     // Run E2E tests against real DIAN Habilitación environment
     systemProperty("dian.environment", System.getProperty("dian.environment", "habilitacion"))
-}
-
-// Flyway configuration for database migrations
-tasks.named("flywayMigrate") {
-    dependsOn("classes")
 }

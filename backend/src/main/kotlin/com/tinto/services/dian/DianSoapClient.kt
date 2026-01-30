@@ -1,6 +1,7 @@
 package com.tinto.services.dian
 
 import com.tinto.security.ConfigurationService
+import jakarta.xml.ws.BindingProvider
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor
@@ -11,8 +12,9 @@ import org.springframework.stereotype.Service
 import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
 import java.util.*
+import javax.security.auth.callback.Callback
+import javax.security.auth.callback.CallbackHandler
 import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.ws.BindingProvider
 
 /**
  * DIAN SOAP client wrapper using Apache CXF
@@ -204,8 +206,8 @@ interface DianWebService {
 /**
  * Password callback handler for WS-Security
  */
-private class PasswordCallbackHandler(private val password: String) : javax.security.auth.callback.CallbackHandler {
-    override fun handle(callbacks: Array<out javax.security.auth.callback.Callback>) {
+private class PasswordCallbackHandler(private val password: String) : CallbackHandler {
+    override fun handle(callbacks: Array<out Callback>) {
         for (callback in callbacks) {
             if (callback is org.apache.wss4j.common.ext.WSPasswordCallback) {
                 callback.password = password

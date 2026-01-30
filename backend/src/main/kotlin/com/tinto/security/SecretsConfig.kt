@@ -46,11 +46,11 @@ class SecretsConfig {
         
         config.password = password
         config.algorithm = "PBEWITHHMACSHA512ANDAES_256"
-        config.keyObtentionIterations = "10000"
-        config.poolSize = "1"
+        config.keyObtentionIterations = 10000
+        config.poolSize = 1
         config.providerName = "BC" // BouncyCastle provider
-        config.saltGeneratorClassName = "org.jasypt.salt.RandomSaltGenerator"
-        config.ivGeneratorClassName = "org.jasypt.iv.RandomIvGenerator"
+        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator")
+        config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator")
         config.stringOutputType = "base64"
         
         encryptor.setConfig(config)
