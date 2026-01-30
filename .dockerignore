@@ -1,0 +1,60 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build artifacts
+build/
+dist/
+target/
+out/
+
+# Dependencies
+node_modules/
+.gradle/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+CONTRIBUTING.md
+LICENSE
+*.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+
+# Specifications (not needed in container)
+specs/
+.specify/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Secrets (only encrypted versions should exist anyway)
+master.key
+secrets.properties
+*.key
+*.pem

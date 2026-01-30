@@ -29,11 +29,11 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan in backend/ and frontend/
-- [ ] T002 Initialize Spring Boot Kotlin project in backend/build.gradle.kts
-- [ ] T003 Initialize Angular workspace in frontend/angular.json
-- [ ] T004 [P] Configure Kotlin linting in backend/.editorconfig
-- [ ] T005 [P] Configure frontend linting in frontend/.eslintrc.json
+- [x] T001 Create project structure per implementation plan in backend/ and frontend/
+- [x] T002 Initialize Spring Boot Kotlin project in backend/build.gradle.kts
+- [x] T003 Initialize Angular workspace in frontend/angular.json
+- [x] T004 [P] Configure Kotlin linting in backend/.editorconfig
+- [x] T005 [P] Configure frontend linting in frontend/.eslintrc.json
 
 ---
 
@@ -43,16 +43,16 @@ description: "Task list template for feature implementation"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Setup database migrations framework in backend/src/main/resources/db/migration/
-- [ ] T007 Implement encryption utilities in backend/src/main/kotlin/security/EncryptionService.kt
-- [ ] T008 Implement master key local access guard in backend/src/main/kotlin/security/MasterKeyGuard.kt
-- [ ] T009 Implement API key derivation and signature validation in backend/src/main/kotlin/security/ApiKeyAuthService.kt
-- [ ] T010 [P] Create API key role model in backend/src/main/kotlin/domain/auth/Role.kt
-- [ ] T011 Configure secure configuration loading in backend/src/main/kotlin/security/SecretsConfig.kt
-- [ ] T012 Setup DIAN SOAP client wrapper in backend/src/main/kotlin/services/dian/DianSoapClient.kt
-- [ ] T013 Configure DIAN environment endpoints in backend/src/main/kotlin/services/dian/DianEndpoints.kt
-- [ ] T014 Setup backend error handling in backend/src/main/kotlin/api/ErrorHandler.kt
-- [ ] T015 Setup frontend API client base in frontend/src/services/api-client.ts
+- [x] T006 Setup database migrations framework in backend/src/main/resources/db/migration/
+- [x] T007 Implement encryption utilities in backend/src/main/kotlin/security/EncryptionService.kt
+- [x] T008 Implement master key local access guard in backend/src/main/kotlin/security/MasterKeyGuard.kt
+- [x] T009 Implement API key derivation and signature validation in backend/src/main/kotlin/security/ApiKeyAuthService.kt
+- [x] T010 [P] Create API key role model in backend/src/main/kotlin/domain/auth/Role.kt
+- [x] T011 Configure secure configuration loading in backend/src/main/kotlin/security/SecretsConfig.kt
+- [x] T012 Setup DIAN SOAP client wrapper in backend/src/main/kotlin/services/dian/DianSoapClient.kt
+- [x] T013 Configure DIAN environment endpoints in backend/src/main/kotlin/services/dian/DianEndpoints.kt
+- [x] T014 Setup backend error handling in backend/src/main/kotlin/api/ErrorHandler.kt
+- [x] T015 Setup frontend API client base in frontend/src/services/api-client.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 

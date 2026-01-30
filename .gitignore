@@ -1,0 +1,99 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Angular
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/bazel-out/
+/frontend/.angular/
+
+# Node
+/frontend/node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Environment files (secrets should be encrypted)
+*.env.local
+*.env.*.local
+
+# Database
+*.db
+*.sqlite
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+
+# Testing
+/coverage
+/.nyc_output
+
+# Application secrets (encrypted versions only)
+# Unencrypted secrets should NEVER be committed
+master.key
+!master.key.enc
+secrets.properties
+!secrets.properties.enc
