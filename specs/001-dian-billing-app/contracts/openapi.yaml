@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Tinto DIAN Billing API
+  version: 0.1.0
+paths:
+  /v1/invoices:
+    post:
+      summary: Issue an electronic invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceRequest"
+      responses:
+        "202":
+          description: Accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceResponse"
+  /v1/invoices/{id}:
+    get:
+      summary: Get invoice status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Invoice status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceStatus"
+components:
+  schemas:
+    InvoiceRequest:
+      type: object
+      properties:
+        issuer:
+          type: object
+        customer:
+          type: object
+        lines:
+          type: array
+          items:
+            type: object
+        totals:
+          type: object
+    InvoiceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        track_id:
+          type: string
+        status:
+          type: string
+    InvoiceStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        cufe:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
