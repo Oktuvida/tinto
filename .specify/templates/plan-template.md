@@ -31,7 +31,10 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Confirm E2E tests are planned per P1 user story (dev + staging).
+- Verify no mocks are proposed for business logic acceptance.
+- Ensure promotion gates rely on E2E results for dev -> staging -> prod.
+- Document test data strategy and traceability for E2E runs.
 
 ## Project Structure
 

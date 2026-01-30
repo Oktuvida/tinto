@@ -1,50 +1,75 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: n/a -> 0.1.0
+- Modified principles: [PRINCIPLE_1_NAME] -> I. E2E-First Development
+  [PRINCIPLE_2_NAME] -> II. Environment Parity, No Mocks
+  [PRINCIPLE_3_NAME] -> III. Business Logic as Acceptance Criteria
+  [PRINCIPLE_4_NAME] -> IV. Promotion Gates by E2E Results
+  [PRINCIPLE_5_NAME] -> V. Test Data Safety and Traceability
+- Added sections: none
+- Removed sections: none
+- Templates requiring updates: ✅ .specify/templates/plan-template.md
+  ✅ .specify/templates/spec-template.md
+  ✅ .specify/templates/tasks-template.md
+  ✅ .specify/templates/checklist-template.md
+  ⚠ pending: .specify/templates/commands/*.md (directory missing)
+- Follow-up TODOs: TODO(RATIFICATION_DATE): original adoption date unknown
+-->
+# tinto Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. E2E-First Development
+All changes MUST be driven by end-to-end tests that cover full user journeys.
+E2E tests MUST be written or updated before implementation and must fail
+before code changes. Rationale: this enforces business outcomes and prevents
+false confidence from narrow tests.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Environment Parity, No Mocks
+Tests MUST run against real services in dev and staging environments; mocks
+and fakes are prohibited for business logic validation. Environments MUST be
+kept as close as possible to production (configs, data shape, integrations).
+Rationale: parity avoids regression gaps between test and production behavior.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Business Logic as Acceptance Criteria
+Acceptance scenarios MUST reflect business rules and be executable as E2E
+tests. Each user story MUST define at least one independent E2E scenario that
+verifies business logic in the target environment. Rationale: success is
+measured by business behavior, not internal implementation.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Promotion Gates by E2E Results
+Promotion between dev -> staging -> prod MUST require passing E2E suites for
+the affected user stories. Failing suites block promotion until resolved.
+Rationale: release confidence depends on validated end-to-end behavior.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Test Data Safety and Traceability
+E2E tests MUST use controlled data with clear provenance. Test runs MUST leave
+auditable traces (test identifiers, environment, and version under test) to
+allow reproduction. Rationale: safe data handling protects environments while
+keeping results trustworthy.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Testing & Environments
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- E2E suites MUST exist for each P1 user story and run in dev and staging.
+- Staging MUST mirror production integrations and configuration defaults.
+- Production validation is by promotion gates, not by ad-hoc manual testing.
+- Mocking external systems is allowed only for non-business behavior (e.g.,
+  resilience drills) and MUST be documented as not qualifying for acceptance.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow & Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Each change MUST include updated E2E coverage or a documented justification.
+- Code review MUST verify: scenarios exist, run in dev/staging, and fail/pass
+  sequence is demonstrated.
+- Releases MUST include an E2E report linking test runs to the deployed build.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- This constitution supersedes all other project practices.
+- Amendments require a documented proposal, rationale, and migration plan.
+- Versioning follows semantic rules: MAJOR for incompatible changes, MINOR for
+  new or expanded principles, PATCH for clarifications only.
+- Compliance reviews MUST occur in every plan/spec review and before release.
+- Runtime guidance lives in `.specify/templates/` and MUST stay aligned.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 0.1.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2026-01-29
