@@ -1,0 +1,235 @@
+<div class="new-invoice-page">
+  <div class="container">
+    <h1>Nueva Factura Electrónica</h1>
+    
+    @if (error()) {
+      <div class="alert alert-error">
+        {{ error() }}
+      </div>
+    }
+    
+    <form (ngSubmit)="createInvoice()" #invoiceForm="ngForm">
+      <!-- Issuer Section -->
+      <section class="form-section">
+        <h2>Emisor</h2>
+        <div class="form-group">
+          <label for="issuerNit">NIT del Emisor *</label>
+          <input
+            type="text"
+            id="issuerNit"
+            name="issuerNit"
+            [(ngModel)]="issuerNit"
+            required
+            placeholder="900123456"
+            class="form-control"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="prefix">Prefijo (opcional)</label>
+          <input
+            type="text"
+            id="prefix"
+            name="prefix"
+            [(ngModel)]="prefix"
+            placeholder="SPOS"
+            class="form-control"
+            maxlength="10"
+          />
+        </div>
+      </section>
+      
+      <!-- Customer Section -->
+      <section class="form-section">
+        <h2>Cliente</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="customerType">Tipo de Identificación *</label>
+            <select
+              id="customerType"
+              name="customerType"
+              [(ngModel)]="customerIdentificationType"
+              required
+              class="form-control"
+            >
+              <option value="NIT">NIT</option>
+              <option value="CC">Cédula de Ciudadanía</option>
+              <option value="CE">Cédula de Extranjería</option>
+              <option value="Pasaporte">Pasaporte</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="customerNumber">Número de Identificación *</label>
+            <input
+              type="text"
+              id="customerNumber"
+              name="customerNumber"
+              [(ngModel)]="customerIdentificationNumber"
+              required
+              placeholder="800123456"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </section>
+      
+      <!-- Line Items Section -->
+      <section class="form-section">
+        <h2>Items de la Factura</h2>
+        
+        <!-- Add Line Item Form -->
+        <div class="line-item-form">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="description">Descripción *</label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                [(ngModel)]="currentLineItem.description"
+                placeholder="Producto o servicio"
+                class="form-control"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="quantity">Cantidad *</label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                [(ngModel)]="currentLineItem.quantity"
+                min="0.0001"
+                step="0.01"
+                class="form-control"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="unitPrice">Precio Unitario *</label>
+              <input
+                type="number"
+                id="unitPrice"
+                name="unitPrice"
+                [(ngModel)]="currentLineItem.unitPrice"
+                min="0"
+                step="0.01"
+                class="form-control"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="taxRate">IVA (%)</label>
+              <input
+                type="number"
+                id="taxRate"
+                name="taxRate"
+                [(ngModel)]="currentLineItem.taxRate"
+                min="0"
+                max="100"
+                step="0.01"
+                class="form-control"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <button
+                type="button"
+                (click)="addLineItem()"
+                class="btn btn-secondary"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Line Items List -->
+        @if (lineItems().length > 0) {
+          <table class="line-items-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th class="text-right">Cantidad</th>
+                <th class="text-right">Precio Unit.</th>
+                <th class="text-right">IVA</th>
+                <th class="text-right">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of lineItems(); track $index) {
+                <tr>
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ item.description }}</td>
+                  <td class="text-right">{{ item.quantity }}</td>
+                  <td class="text-right">{{ formatCurrency(item.unitPrice) }}</td>
+                  <td class="text-right">{{ item.taxRate }}%</td>
+                  <td class="text-right">{{ formatCurrency(item.quantity * item.unitPrice) }}</td>
+                  <td>
+                    <button
+                      type="button"
+                      (click)="removeLineItem($index)"
+                      class="btn btn-danger btn-sm"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <p class="text-muted">No hay items agregados. Use el formulario arriba para agregar items.</p>
+        }
+      </section>
+      
+      <!-- Totals Section -->
+      @if (lineItems().length > 0) {
+        <section class="totals-section">
+          <div class="totals-grid">
+            <div class="total-row">
+              <span class="total-label">Subtotal:</span>
+              <span class="total-value">{{ formatCurrency(subtotal()) }}</span>
+            </div>
+            <div class="total-row">
+              <span class="total-label">IVA:</span>
+              <span class="total-value">{{ formatCurrency(taxAmount()) }}</span>
+            </div>
+            <div class="total-row total-final">
+              <span class="total-label">Total:</span>
+              <span class="total-value">{{ formatCurrency(total()) }}</span>
+            </div>
+          </div>
+        </section>
+      }
+      
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button
+          type="button"
+          (click)="router.navigate(['/'])"
+          class="btn btn-secondary"
+          [disabled]="isSubmitting()"
+        >
+          Cancelar
+        </button>
+        
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSubmitting() || lineItems().length === 0"
+        >
+          @if (isSubmitting()) {
+            <span>Creando factura...</span>
+          } @else {
+            <span>Crear Factura</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -85,11 +85,11 @@ description: "Task list template for feature implementation"
 - [x] T027 [US1] Implement XAdES-EPES signer in backend/src/main/kotlin/services/dian/XmlSigner.kt
 - [x] T028 [US1] Implement ZIP packager in backend/src/main/kotlin/services/dian/ZipPackager.kt
 - [x] T029 [US1] Implement DIAN send flow in backend/src/main/kotlin/services/dian/DianSubmissionService.kt
-- [ ] T030 [US1] Implement invoice issuance service in backend/src/main/kotlin/services/invoice/InvoiceService.kt
-- [ ] T031 [US1] Implement POST /v1/invoices in backend/src/main/kotlin/api/InvoiceController.kt
-- [ ] T032 [P] [US1] Create invoice form page in frontend/src/pages/invoices/new-invoice.component.ts
-- [ ] T033 [P] [US1] Create invoice review component in frontend/src/components/invoices/invoice-review.component.ts
-- [ ] T034 [US1] Wire invoice submit flow in frontend/src/services/invoice.service.ts
+- [x] T030 [US1] Implement invoice issuance service in backend/src/main/kotlin/services/invoice/InvoiceService.kt
+- [x] T031 [US1] Implement POST /v1/invoices in backend/src/main/kotlin/api/InvoiceController.kt
+- [x] T032 [P] [US1] Create invoice form page in frontend/src/pages/invoices/new-invoice.component.ts
+- [x] T033 [P] [US1] Create invoice review component in frontend/src/components/invoices/invoice-review.component.ts
+- [x] T034 [US1] Wire invoice submit flow in frontend/src/services/invoice.service.ts
 - [ ] T035 [US1] Add validation and error handling in backend/src/main/kotlin/api/InvoiceController.kt
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently

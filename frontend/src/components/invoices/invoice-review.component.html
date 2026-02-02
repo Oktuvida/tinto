@@ -1,0 +1,153 @@
+<div class="invoice-review">
+  <div class="invoice-header">
+    <div class="header-left">
+      <h2>Factura {{ invoice.invoiceNumber }}</h2>
+      <span [class]="getStatusClass()">
+        {{ statusLabels[invoice.status] }}
+      </span>
+    </div>
+    
+    @if (invoice.cufe) {
+      <div class="cufe-section">
+        <label>CUFE:</label>
+        <code class="cufe-code">{{ invoice.cufe }}</code>
+      </div>
+    }
+  </div>
+  
+  <div class="invoice-body">
+    <!-- Parties Section -->
+    <div class="section-grid">
+      <div class="info-section">
+        <h3>Emisor</h3>
+        <div class="info-row">
+          <span class="info-label">NIT:</span>
+          <span class="info-value">{{ invoice.issuerNit }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Nombre:</span>
+          <span class="info-value">{{ invoice.issuerName }}</span>
+        </div>
+      </div>
+      
+      <div class="info-section">
+        <h3>Cliente</h3>
+        <div class="info-row">
+          <span class="info-label">Identificación:</span>
+          <span class="info-value">{{ invoice.customerIdentification }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Nombre:</span>
+          <span class="info-value">{{ invoice.customerName }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dates Section -->
+    <div class="info-section">
+      <h3>Fechas</h3>
+      <div class="section-grid">
+        <div class="info-row">
+          <span class="info-label">Fecha de Emisión:</span>
+          <span class="info-value">{{ formatDate(invoice.issueDate) }}</span>
+        </div>
+        @if (invoice.dueDate) {
+          <div class="info-row">
+            <span class="info-label">Fecha de Vencimiento:</span>
+            <span class="info-value">{{ formatDate(invoice.dueDate) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+    
+    <!-- Line Items Section -->
+    @if (lineItems && lineItems.length > 0) {
+      <div class="info-section">
+        <h3>Detalle de Items</h3>
+        <table class="line-items-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Descripción</th>
+              <th class="text-right">Cantidad</th>
+              <th class="text-right">Precio Unit.</th>
+              <th class="text-right">IVA</th>
+              <th class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of lineItems; track item.lineNumber) {
+              <tr>
+                <td>{{ item.lineNumber }}</td>
+                <td>{{ item.description }}</td>
+                <td class="text-right">{{ item.quantity }}</td>
+                <td class="text-right">{{ formatCurrency(item.unitPrice) }}</td>
+                <td class="text-right">
+                  @if (item.taxRate) {
+                    {{ item.taxRate }}%
+                  } @else {
+                    <span class="text-muted">-</span>
+                  }
+                </td>
+                <td class="text-right">{{ formatCurrency(item.lineTotal) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    
+    <!-- Totals Section -->
+    <div class="totals-section">
+      <div class="totals-grid">
+        <div class="total-row">
+          <span class="total-label">Subtotal:</span>
+          <span class="total-value">{{ formatCurrency(invoice.subtotal) }}</span>
+        </div>
+        <div class="total-row">
+          <span class="total-label">IVA:</span>
+          <span class="total-value">{{ formatCurrency(invoice.taxAmount) }}</span>
+        </div>
+        <div class="total-row total-final">
+          <span class="total-label">Total:</span>
+          <span class="total-value">{{ formatCurrency(invoice.totalAmount) }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Metadata Section -->
+    <div class="metadata-section">
+      <div class="info-row">
+        <span class="info-label">Creada:</span>
+        <span class="info-value">{{ formatDateTime(invoice.createdAt) }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Actualizada:</span>
+        <span class="info-value">{{ formatDateTime(invoice.updatedAt) }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Actions -->
+  @if (showActions) {
+    <div class="invoice-actions">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="btn btn-secondary"
+      >
+        Volver
+      </button>
+      
+      @if (canIssue()) {
+        <button
+          type="button"
+          (click)="onIssue()"
+          class="btn btn-primary"
+        >
+          Enviar a DIAN
+        </button>
+      }
+    </div>
+  }
+</div>
