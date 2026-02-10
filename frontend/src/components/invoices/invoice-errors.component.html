@@ -1,0 +1,41 @@
+<div class="error-guidance" [class]="'severity-' + getSeverity()">
+  <div class="error-header">
+    <span class="error-icon" aria-hidden="true">!</span>
+    <div>
+      <h3 class="error-category">{{ getCategoryLabel() }}</h3>
+      @if (errorCode) {
+        <span class="error-code">Codigo: {{ errorCode }}</span>
+      }
+    </div>
+  </div>
+
+  <p class="error-explanation">{{ guidance.explanation }}</p>
+
+  @if (errorMessage) {
+    <details class="raw-error">
+      <summary>Mensaje original de la DIAN</summary>
+      <pre>{{ errorMessage }}</pre>
+    </details>
+  }
+
+  @if (guidance.suggestedActions.length > 0) {
+    <div class="actions-section">
+      <h4>Que hacer</h4>
+      <ol class="suggested-actions">
+        @for (action of guidance.suggestedActions; track action) {
+          <li>{{ action }}</li>
+        }
+      </ol>
+    </div>
+  }
+
+  @if (guidance.retryable) {
+    <div class="retryable-badge">
+      Reintentable — puede corregir y reenviar
+    </div>
+  } @else {
+    <div class="not-retryable-badge">
+      Requiere correccion manual antes de reenviar
+    </div>
+  }
+</div>

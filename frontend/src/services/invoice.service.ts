@@ -40,6 +40,20 @@ export class InvoiceService {
   async listInvoices(issuerNit: string): Promise<InvoiceResponse[]> {
     return this.apiClient.get<InvoiceResponse[]>(`/v1/invoices?issuerNit=${encodeURIComponent(issuerNit)}`);
   }
+
+  /**
+   * Get invoice status with DIAN submission details and error guidance
+   */
+  async getInvoiceStatus(invoiceId: string): Promise<InvoiceStatusDetail> {
+    return this.apiClient.get<InvoiceStatusDetail>(`/v1/invoices/${invoiceId}/status`);
+  }
+
+  /**
+   * Refresh invoice status by polling DIAN
+   */
+  async refreshInvoiceStatus(invoiceId: string): Promise<InvoiceStatusDetail> {
+    return this.apiClient.post<InvoiceStatusDetail>(`/v1/invoices/${invoiceId}/status/refresh`, {});
+  }
 }
 
 /**
@@ -135,4 +149,79 @@ export const INVOICE_STATUS_COLORS: Record<InvoiceStatus, string> = {
   ACCEPTED_BY_DIAN: 'green',
   REJECTED_BY_DIAN: 'red',
   CANCELLED: 'gray'
+};
+
+/**
+ * Full invoice status detail from GET /v1/invoices/{id}/status
+ */
+export interface InvoiceStatusDetail {
+  invoiceId: string;
+  invoiceNumber: string;
+  status: InvoiceStatus;
+  cufe: string | null;
+  submissions: SubmissionSummary[];
+  latestSubmission: SubmissionSummary | null;
+  errorGuidance: ErrorGuidance | null;
+  canRetry: boolean;
+  canIssue: boolean;
+}
+
+/**
+ * Summary of a DIAN submission attempt
+ */
+export interface SubmissionSummary {
+  id: string;
+  trackId: string | null;
+  status: DianSubmissionStatus;
+  statusMessage: string;
+  errorCode: string | null;
+  errorMessage: string | null;
+  submittedAt: string | null;
+  processedAt: string | null;
+  createdAt: string;
+}
+
+/**
+ * DIAN error guidance with user-friendly explanation
+ */
+export interface ErrorGuidance {
+  category: string;
+  explanation: string;
+  suggestedActions: string[];
+  retryable: boolean;
+}
+
+/**
+ * DIAN submission status enum
+ */
+export type DianSubmissionStatus =
+  | 'PENDING'
+  | 'SUBMITTED'
+  | 'PROCESSING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'ERROR';
+
+/**
+ * Status labels for DIAN submissions in Spanish
+ */
+export const DIAN_STATUS_LABELS: Record<DianSubmissionStatus, string> = {
+  PENDING: 'Pendiente',
+  SUBMITTED: 'Enviado',
+  PROCESSING: 'En Proceso',
+  ACCEPTED: 'Aceptado',
+  REJECTED: 'Rechazado',
+  ERROR: 'Error'
+};
+
+/**
+ * Status colors for DIAN submissions
+ */
+export const DIAN_STATUS_COLORS: Record<DianSubmissionStatus, string> = {
+  PENDING: 'gray',
+  SUBMITTED: 'blue',
+  PROCESSING: 'purple',
+  ACCEPTED: 'green',
+  REJECTED: 'red',
+  ERROR: 'orange'
 };

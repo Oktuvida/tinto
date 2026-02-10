@@ -1,0 +1,126 @@
+<div class="invoice-status-page">
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-state">
+      <p>Cargando factura...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error(); as errorMsg) {
+    <div class="error-banner">
+      <p>{{ errorMsg }}</p>
+      <button (click)="loadStatus()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Content -->
+  @if (!loading() && invoice(); as inv) {
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <h1>Factura {{ inv.invoiceNumber }}</h1>
+        <span class="status-badge status-{{ statusColors[inv.status] }}">
+          {{ statusLabels[inv.status] }}
+        </span>
+      </div>
+      <div class="header-actions">
+        @if (statusDetail()?.canIssue) {
+          <button class="btn-primary" (click)="issueInvoice()" [disabled]="refreshing()">
+            Enviar a DIAN
+          </button>
+        }
+        <button class="btn-secondary" (click)="refreshStatus()" [disabled]="refreshing()">
+          {{ refreshing() ? 'Actualizando...' : 'Actualizar Estado' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Invoice Summary -->
+    <section class="card">
+      <h2>Resumen</h2>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Emisor</span>
+          <span class="value">{{ inv.issuerName }}</span>
+          <span class="sub">NIT: {{ inv.issuerNit }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Cliente</span>
+          <span class="value">{{ inv.customerName }}</span>
+          <span class="sub">{{ inv.customerIdentification }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Fecha de Emision</span>
+          <span class="value">{{ formatDate(inv.issueDate) }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Total</span>
+          <span class="value amount">{{ formatCurrency(inv.totalAmount) }}</span>
+          <span class="sub">Subtotal: {{ formatCurrency(inv.subtotal) }} | IVA: {{ formatCurrency(inv.taxAmount) }}</span>
+        </div>
+      </div>
+      @if (statusDetail()?.cufe; as cufe) {
+        <div class="cufe-row">
+          <span class="label">CUFE</span>
+          <code class="cufe-value">{{ cufe }}</code>
+        </div>
+      }
+    </section>
+
+    <!-- Error Guidance -->
+    @if (statusDetail()?.errorGuidance; as guidance) {
+      <app-invoice-errors
+        [guidance]="guidance"
+        [errorCode]="statusDetail()?.latestSubmission?.errorCode ?? null"
+        [errorMessage]="statusDetail()?.latestSubmission?.errorMessage ?? null"
+      />
+    }
+
+    <!-- Submission History -->
+    @if (statusDetail()?.submissions; as submissions) {
+      <section class="card">
+        <h2>Historial de Envios DIAN</h2>
+        @if (submissions.length === 0) {
+          <p class="empty-state">No se ha enviado esta factura a la DIAN aun.</p>
+        } @else {
+          <table class="submissions-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Track ID</th>
+                <th>Mensaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (sub of submissions; track sub.id) {
+                <tr>
+                  <td>{{ formatDateTime(sub.createdAt) }}</td>
+                  <td>
+                    <span class="status-badge status-{{ dianStatusColors[sub.status] }}">
+                      {{ dianStatusLabels[sub.status] }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (sub.trackId) {
+                      <code>{{ sub.trackId }}</code>
+                    } @else {
+                      <span class="muted">-</span>
+                    }
+                  </td>
+                  <td>{{ sub.statusMessage }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+    }
+
+    <!-- Back Link -->
+    <div class="page-footer">
+      <a routerLink="/invoices/new">Crear nueva factura</a>
+    </div>
+  }
+</div>

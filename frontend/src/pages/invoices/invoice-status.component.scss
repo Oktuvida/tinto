@@ -1,0 +1,286 @@
+.invoice-status-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+// Loading & Error
+
+.loading-state {
+  text-align: center;
+  padding: 48px 0;
+  color: #666;
+}
+
+.error-banner {
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  p {
+    margin: 0;
+    color: #721c24;
+  }
+
+  button {
+    background: none;
+    border: 1px solid #721c24;
+    color: #721c24;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background: #721c24;
+      color: #fff;
+    }
+  }
+}
+
+// Header
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+  }
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+
+  &:hover:not(:disabled) {
+    background: #1565c0;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Cards
+
+.card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0 0 16px;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  h3 {
+    margin: 12px 0 8px;
+    font-size: 0.95rem;
+    color: #555;
+  }
+}
+
+// Summary Grid
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+
+    &.amount {
+      font-size: 1.25rem;
+      color: #1976d2;
+    }
+  }
+
+  .sub {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 2px;
+  }
+}
+
+.cufe-row {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+
+  .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888;
+    display: block;
+    margin-bottom: 4px;
+  }
+}
+
+.cufe-value {
+  font-size: 0.7rem;
+  word-break: break-all;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+// Status Badges
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-gray {
+  background: #eee;
+  color: #666;
+}
+
+.status-orange {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-blue {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-purple {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.status-green {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-red {
+  background: #ffebee;
+  color: #c62828;
+}
+
+// Submissions Table
+
+.submissions-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    font-size: 0.875rem;
+    color: #333;
+
+    code {
+      font-size: 0.75rem;
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 24px 0;
+}
+
+.muted {
+  color: #ccc;
+}
+
+// Footer
+
+.page-footer {
+  margin-top: 24px;
+  text-align: center;
+
+  a {
+    color: #1976d2;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

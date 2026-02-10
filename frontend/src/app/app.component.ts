@@ -1,23 +1,49 @@
 import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet, RouterLink],
   template: `
-    <div class="container">
-      <h1>Tinto DIAN</h1>
-      <p>Sistema de Facturación Electrónica</p>
-    </div>
+    <header class="app-header">
+      <a routerLink="/" class="brand">Tinto DIAN</a>
+      <nav>
+        <a routerLink="/invoices/new">Nueva Factura</a>
+      </nav>
+    </header>
+    <main class="app-content">
+      <router-outlet />
+    </main>
   `,
   styles: [`
-    .container {
-      text-align: center;
-      padding: 40px;
+    .app-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 12px 24px;
+      background: #1976d2;
+      color: #fff;
     }
-    h1 {
-      color: #1976d2;
-      margin-bottom: 20px;
+    .app-header a {
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    nav a {
+      opacity: 0.85;
+      font-size: 0.875rem;
+    }
+    nav a:hover {
+      opacity: 1;
+    }
+    .app-content {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
     }
   `]
 })
