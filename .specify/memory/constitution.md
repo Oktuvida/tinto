@@ -1,12 +1,13 @@
 <!--
 Sync Impact Report
-- Version change: n/a -> 0.1.0
+- Version change: 0.1.0 -> 0.2.0
 - Modified principles: [PRINCIPLE_1_NAME] -> I. E2E-First Development
   [PRINCIPLE_2_NAME] -> II. Environment Parity, No Mocks
   [PRINCIPLE_3_NAME] -> III. Business Logic as Acceptance Criteria
   [PRINCIPLE_4_NAME] -> IV. Promotion Gates by E2E Results
   [PRINCIPLE_5_NAME] -> V. Test Data Safety and Traceability
-- Added sections: none
+  [PRINCIPLE_6_NAME] -> VI. Reproducible, Declarative, Container-First (NEW)
+- Added sections: Principle VI
 - Removed sections: none
 - Templates requiring updates: ✅ .specify/templates/plan-template.md
   ✅ .specify/templates/spec-template.md
@@ -48,6 +49,16 @@ auditable traces (test identifiers, environment, and version under test) to
 allow reproduction. Rationale: safe data handling protects environments while
 keeping results trustworthy.
 
+### VI. Reproducible, Declarative, Container-First
+All environments, including local development, MUST be defined declaratively
+and run inside containers. Infrastructure and service dependencies MUST be
+expressed as code (e.g., Compose files, Containerfiles) so that any developer
+can reproduce the full stack with a single command. Host-installed runtimes or
+databases are prohibited as primary dev targets; the container definition is
+the source of truth. Rationale: reproducibility eliminates "works on my
+machine" failures and ensures every environment is auditable, portable, and
+identical from dev through production.
+
 ## Testing & Environments
 
 - E2E suites MUST exist for each P1 user story and run in dev and staging.
@@ -72,4 +83,4 @@ keeping results trustworthy.
 - Compliance reviews MUST occur in every plan/spec review and before release.
 - Runtime guidance lives in `.specify/templates/` and MUST stay aligned.
 
-**Version**: 0.1.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2026-01-29
+**Version**: 0.2.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2026-02-10
