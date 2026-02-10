@@ -19,6 +19,7 @@ RUN ./gradlew bootJar --no-daemon -x test
 # -- Stage 2: Runtime --
 FROM docker.io/library/eclipse-temurin:21-jre
 
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 RUN groupadd --system tinto && useradd --system --gid tinto tinto
 
 WORKDIR /app
@@ -33,6 +34,6 @@ USER tinto
 EXPOSE 8080
 
 HEALTHCHECK --interval=15s --timeout=3s --start-period=30s --retries=3 \
-  CMD ["java", "-cp", "app.jar", "org.springframework.boot.loader.tools.MainClassFinder"] || exit 1
+  CMD curl -sf http://localhost:8080/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

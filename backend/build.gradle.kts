@@ -38,6 +38,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web-services") // For SOAP client
     
@@ -48,6 +49,7 @@ dependencies {
     
     // Database
     implementation("org.postgresql:postgresql:42.7.4")
+    implementation("org.springframework.boot:spring-boot-flyway") // Spring Boot 4 Flyway autoconfiguration
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     

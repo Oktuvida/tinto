@@ -130,7 +130,7 @@ data class Invoice(
      * Current status
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     var status: InvoiceStatus = InvoiceStatus.DRAFT,
 
     /**

@@ -25,14 +25,11 @@ CREATE TABLE master_access_keys (
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
--- API key roles (Admin, Operator, Auditor)
-CREATE TYPE api_key_role AS ENUM ('ADMIN', 'OPERATOR', 'AUDITOR');
-
 -- API keys (derived from master key)
 CREATE TABLE api_keys (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
-    role api_key_role NOT NULL,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'OPERATOR', 'AUDITOR')),
     key_hash VARCHAR(128) NOT NULL UNIQUE, -- SHA-512 hash of derived key
     encrypted_key_data TEXT NOT NULL, -- Encrypted storage
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -82,17 +79,6 @@ CREATE TABLE customers (
     UNIQUE(identification_type, identification_number)
 );
 
--- Invoice statuses
-CREATE TYPE invoice_status AS ENUM (
-    'DRAFT',
-    'PENDING_SIGNATURE',
-    'SIGNED',
-    'SUBMITTED_TO_DIAN',
-    'ACCEPTED_BY_DIAN',
-    'REJECTED_BY_DIAN',
-    'CANCELLED'
-);
-
 -- Invoices
 CREATE TABLE invoices (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -115,7 +101,8 @@ CREATE TABLE invoices (
     -- CUFE (Código Único de Factura Electrónica)
     cufe VARCHAR(96), -- SHA-384 hash
     -- Status
-    status invoice_status NOT NULL DEFAULT 'DRAFT',
+    status VARCHAR(30) NOT NULL DEFAULT 'DRAFT'
+        CHECK (status IN ('DRAFT', 'PENDING_SIGNATURE', 'SIGNED', 'SUBMITTED_TO_DIAN', 'ACCEPTED_BY_DIAN', 'REJECTED_BY_DIAN', 'CANCELLED')),
     -- XML data (encrypted at rest)
     ubl_xml_encrypted TEXT, -- Encrypted UBL XML
     signed_xml_encrypted TEXT, -- Encrypted signed XML
@@ -144,16 +131,6 @@ CREATE TABLE line_items (
     UNIQUE(invoice_id, line_number)
 );
 
--- DIAN submission statuses
-CREATE TYPE dian_submission_status AS ENUM (
-    'PENDING',
-    'SUBMITTED',
-    'PROCESSING',
-    'ACCEPTED',
-    'REJECTED',
-    'ERROR'
-);
-
 -- DIAN submissions (track async submission process)
 CREATE TABLE dian_submissions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -161,7 +138,8 @@ CREATE TABLE dian_submissions (
     environment_id UUID NOT NULL REFERENCES environments(id),
     -- DIAN tracking
     track_id VARCHAR(100), -- From SendBillAsync response
-    status dian_submission_status NOT NULL DEFAULT 'PENDING',
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING'
+        CHECK (status IN ('PENDING', 'SUBMITTED', 'PROCESSING', 'ACCEPTED', 'REJECTED', 'ERROR')),
     -- Request/Response data (encrypted)
     zip_file_encrypted TEXT, -- Encrypted ZIP file sent to DIAN
     dian_response_encrypted TEXT, -- Encrypted DIAN ApplicationResponse XML

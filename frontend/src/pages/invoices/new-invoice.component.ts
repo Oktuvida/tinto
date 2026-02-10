@@ -149,6 +149,13 @@ export class NewInvoiceComponent {
   }
   
   /**
+   * Navigate back to home
+   */
+  goHome(): void {
+    this.router.navigate(['/']);
+  }
+
+  /**
    * Format currency
    */
   formatCurrency(amount: number): string {

@@ -60,7 +60,7 @@ data class DianSubmission(
      * Current submission status
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     var status: DianSubmissionStatus = DianSubmissionStatus.PENDING,
 
     /**

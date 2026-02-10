@@ -1,10 +1,14 @@
 package com.tinto.repository
 
+import com.tinto.domain.auth.ApiKey
+import com.tinto.domain.auth.MasterAccessKey
+import com.tinto.domain.auth.RequestSignature
 import com.tinto.domain.billing.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
@@ -244,4 +248,48 @@ interface EnvironmentRepository : JpaRepository<Environment, UUID> {
      */
     @Query("SELECT e FROM Environment e WHERE e.isProduction = false")
     fun findNonProductionEnvironments(): List<Environment>
+}
+
+/**
+ * Repository for MasterAccessKey entities
+ */
+@Repository
+interface MasterAccessKeyRepository : JpaRepository<MasterAccessKey, UUID> {
+
+    fun findByKeyHash(keyHash: String): MasterAccessKey?
+
+    fun findByIsActiveTrue(): List<MasterAccessKey>
+}
+
+/**
+ * Repository for ApiKey entities
+ */
+@Repository
+interface ApiKeyRepository : JpaRepository<ApiKey, UUID> {
+
+    fun findByKeyHash(keyHash: String): ApiKey?
+
+    fun findByIsActiveTrue(): List<ApiKey>
+
+    fun findByName(name: String): ApiKey?
+}
+
+/**
+ * Repository for RequestSignature entities
+ */
+@Repository
+interface RequestSignatureRepository : JpaRepository<RequestSignature, UUID> {
+
+    /**
+     * Check for replay attacks — does this exact signature + timestamp already exist?
+     */
+    fun existsBySignatureHashAndRequestTimestamp(
+        signatureHash: String,
+        requestTimestamp: Instant
+    ): Boolean
+
+    /**
+     * Find signatures by API key (for auditing)
+     */
+    fun findByApiKey(apiKey: ApiKey): List<RequestSignature>
 }
