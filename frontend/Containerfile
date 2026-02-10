@@ -1,0 +1,36 @@
+# -- Stage 1: Build --
+FROM docker.io/library/node:22-alpine AS build
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy dependency manifests first (layer caching)
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build for production
+RUN pnpm run build -- --configuration=production
+
+# -- Stage 2: Runtime --
+FROM docker.io/library/nginx:1-alpine
+
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/tinto.conf
+
+# Copy built assets
+COPY --from=build /app/dist/tinto-frontend/browser /usr/share/nginx/html
+
+EXPOSE 80
+
+HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -qO- http://localhost/ || exit 1

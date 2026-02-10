@@ -1,0 +1,38 @@
+# -- Stage 1: Build --
+FROM docker.io/library/eclipse-temurin:21-jdk AS build
+
+WORKDIR /app
+
+# Copy Gradle wrapper and build files first (layer caching)
+COPY gradlew settings.gradle.kts build.gradle.kts gradle.properties ./
+COPY gradle/ gradle/
+
+# Download dependencies (cached unless build files change)
+RUN ./gradlew dependencies --no-daemon --quiet
+
+# Copy source code
+COPY src/ src/
+
+# Build application
+RUN ./gradlew bootJar --no-daemon -x test
+
+# -- Stage 2: Runtime --
+FROM docker.io/library/eclipse-temurin:21-jre
+
+RUN groupadd --system tinto && useradd --system --gid tinto tinto
+
+WORKDIR /app
+
+COPY --from=build /app/build/libs/tinto-backend-*-SNAPSHOT.jar app.jar
+
+# Create directories for secrets and data
+RUN mkdir -p /var/tinto && chown tinto:tinto /var/tinto
+
+USER tinto
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=15s --timeout=3s --start-period=30s --retries=3 \
+  CMD ["java", "-cp", "app.jar", "org.springframework.boot.loader.tools.MainClassFinder"] || exit 1
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -75,8 +75,10 @@ logs/
 *.log
 
 # Environment files (secrets should be encrypted)
-*.env.local
-*.env.*.local
+.env
+.env.local
+.env.*
+!.env.example
 
 # Database
 *.db

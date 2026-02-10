@@ -90,7 +90,7 @@ description: "Task list template for feature implementation"
 - [x] T032 [P] [US1] Create invoice form page in frontend/src/pages/invoices/new-invoice.component.ts
 - [x] T033 [P] [US1] Create invoice review component in frontend/src/components/invoices/invoice-review.component.ts
 - [x] T034 [US1] Wire invoice submit flow in frontend/src/services/invoice.service.ts
-- [ ] T035 [US1] Add validation and error handling in backend/src/main/kotlin/api/InvoiceController.kt
+- [x] T035 [US1] Add validation and error handling in backend/src/main/kotlin/api/InvoiceController.kt
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -104,10 +104,10 @@ description: "Task list template for feature implementation"
 
 ### Implementation for User Story 2
 
-- [ ] T036 [US2] Implement status retrieval service in backend/src/main/kotlin/services/invoice/InvoiceStatusService.kt
+- [x] T036 [US2] Implement status retrieval service in backend/src/main/kotlin/services/invoice/InvoiceStatusService.kt
 - [ ] T037 [US2] Implement GET /v1/invoices/{id} in backend/src/main/kotlin/api/InvoiceController.kt
 - [ ] T038 [P] [US2] Create invoice status page in frontend/src/pages/invoices/invoice-status.component.ts
-- [ ] T039 [US2] Map DIAN errors to user guidance in backend/src/main/kotlin/services/dian/DianErrorMapper.kt
+- [x] T039 [US2] Map DIAN errors to user guidance in backend/src/main/kotlin/services/dian/DianErrorMapper.kt
 - [ ] T040 [US2] Render DIAN error guidance in frontend/src/components/invoices/invoice-errors.component.ts
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently

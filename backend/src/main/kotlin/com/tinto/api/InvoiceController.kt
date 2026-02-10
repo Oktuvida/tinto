@@ -5,6 +5,7 @@ import com.tinto.api.dto.LineItemRequest
 import com.tinto.domain.billing.Invoice
 import com.tinto.domain.billing.InvoiceStatus
 import com.tinto.services.invoice.InvoiceService
+import com.tinto.services.invoice.InvoiceServiceException
 import com.tinto.services.invoice.InvoiceWithLineItems
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
@@ -30,6 +31,14 @@ class InvoiceController(
 
     private val logger = LoggerFactory.getLogger(InvoiceController::class.java)
 
+    companion object {
+        private val VALID_IDENTIFICATION_TYPES = setOf(
+            "NIT", "CC", "CE", "TI", "PP", "DIE", "NUIP", "RC"
+        )
+        private val VALID_CURRENCIES = setOf("COP", "USD", "EUR")
+        private const val MAX_LINE_ITEMS = 500
+    }
+
     /**
      * Create a new invoice
      *
@@ -43,6 +52,9 @@ class InvoiceController(
         @Valid @RequestBody request: CreateInvoiceRequest
     ): ResponseEntity<InvoiceResponse> {
         logger.info("Creating invoice for issuer: ${request.issuerNit}")
+
+        // Business validations beyond Jakarta annotations
+        validateCreateRequest(request)
 
         val invoice = invoiceService.createInvoice(request)
 
@@ -105,9 +117,58 @@ class InvoiceController(
     ): ResponseEntity<List<InvoiceResponse>> {
         logger.debug("Listing invoices for issuer: $issuerNit")
 
+        if (!issuerNit.matches(Regex("^[0-9]{9,10}$"))) {
+            throw IllegalArgumentException("issuerNit must be 9-10 digits")
+        }
+
         val invoices = invoiceService.listInvoicesByIssuer(issuerNit)
 
         return ResponseEntity.ok(invoices.map { it.toResponse() })
+    }
+
+    /**
+     * Business-level validations for invoice creation
+     */
+    private fun validateCreateRequest(request: CreateInvoiceRequest) {
+        // Validate identification type is a known DIAN code
+        if (request.customerIdentificationType !in VALID_IDENTIFICATION_TYPES) {
+            throw IllegalArgumentException(
+                "Invalid identification type '${request.customerIdentificationType}'. " +
+                "Must be one of: ${VALID_IDENTIFICATION_TYPES.joinToString()}"
+            )
+        }
+
+        // Validate currency if provided
+        val currency = request.currencyCode ?: "COP"
+        if (currency !in VALID_CURRENCIES) {
+            throw IllegalArgumentException(
+                "Unsupported currency '$currency'. Must be one of: ${VALID_CURRENCIES.joinToString()}"
+            )
+        }
+
+        // Validate line item count limit
+        if (request.lineItems.size > MAX_LINE_ITEMS) {
+            throw IllegalArgumentException(
+                "Too many line items (${request.lineItems.size}). Maximum is $MAX_LINE_ITEMS"
+            )
+        }
+
+        // Validate due date is after issue date when both are provided
+        if (request.issueDate != null && request.dueDate != null) {
+            if (!request.dueDate.isAfter(request.issueDate)) {
+                throw IllegalArgumentException("Due date must be after issue date")
+            }
+        }
+
+        // Validate line item totals are reasonable (no overflow)
+        request.lineItems.forEach { item ->
+            val lineTotal = item.quantity.multiply(item.unitPrice)
+            if (lineTotal.compareTo(BigDecimal("999999999999.99")) > 0) {
+                throw IllegalArgumentException(
+                    "Line item '${item.description}' total exceeds maximum allowed amount"
+                )
+            }
+        }
     }
 }
 

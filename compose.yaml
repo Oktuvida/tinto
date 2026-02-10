@@ -1,0 +1,66 @@
+## Tinto DIAN Billing App - Container-First Development Stack
+## Constitution Principle VI: Reproducible, Declarative, Container-First
+##
+## Usage:
+##   podman compose up        # start full stack
+##   podman compose up -d     # start detached
+##   podman compose down -v   # stop and remove volumes
+
+services:
+  # -- PostgreSQL 18 --
+  db:
+    image: docker.io/library/postgres:18
+    environment:
+      POSTGRES_DB: tinto_dev
+      POSTGRES_USER: tinto
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tinto_dev_secret}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tinto -d tinto_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # -- Spring Boot Backend --
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tinto_dev
+      SPRING_DATASOURCE_USERNAME: tinto
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-tinto_dev_secret}
+      JASYPT_ENCRYPTOR_PASSWORD: ${JASYPT_PASSWORD:-dev_encryptor_key}
+      DIAN_ENVIRONMENT: habilitacion
+    ports:
+      - "8080:8080"
+    volumes:
+      - tinto-secrets:/var/tinto:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+
+  # -- Angular Frontend (nginx) --
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "4200:80"
+
+volumes:
+  pgdata:
+  tinto-secrets:
