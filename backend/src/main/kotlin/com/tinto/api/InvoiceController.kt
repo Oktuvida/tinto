@@ -6,6 +6,8 @@ import com.tinto.domain.billing.Invoice
 import com.tinto.domain.billing.InvoiceStatus
 import com.tinto.services.invoice.InvoiceService
 import com.tinto.services.invoice.InvoiceServiceException
+import com.tinto.services.invoice.InvoiceStatusService
+import com.tinto.services.invoice.InvoiceStatusDetail
 import com.tinto.services.invoice.InvoiceWithLineItems
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
@@ -26,7 +28,8 @@ import java.util.*
 @RestController
 @RequestMapping("/v1/invoices")
 class InvoiceController(
-    private val invoiceService: InvoiceService
+    private val invoiceService: InvoiceService,
+    private val invoiceStatusService: InvoiceStatusService
 ) {
 
     private val logger = LoggerFactory.getLogger(InvoiceController::class.java)
@@ -124,6 +127,48 @@ class InvoiceController(
         val invoices = invoiceService.listInvoicesByIssuer(issuerNit)
 
         return ResponseEntity.ok(invoices.map { it.toResponse() })
+    }
+
+    /**
+     * Get invoice status with DIAN submission details and error guidance
+     *
+     * GET /v1/invoices/{id}/status
+     *
+     * Returns the full status including:
+     * - Current invoice status
+     * - All DIAN submissions
+     * - Error guidance (if rejected/errored)
+     * - Whether the invoice can be retried or re-issued
+     */
+    @GetMapping("/{id}/status")
+    fun getInvoiceStatus(
+        @PathVariable id: UUID
+    ): ResponseEntity<InvoiceStatusDetail> {
+        logger.debug("Getting status for invoice: $id")
+
+        val statusDetail = invoiceStatusService.getInvoiceStatus(id)
+
+        return ResponseEntity.ok(statusDetail)
+    }
+
+    /**
+     * Refresh invoice status by polling DIAN
+     *
+     * POST /v1/invoices/{id}/status/refresh
+     *
+     * Polls DIAN for the latest submission status.
+     * Only has effect when the latest submission is in a non-final state
+     * (SUBMITTED or PROCESSING).
+     */
+    @PostMapping("/{id}/status/refresh")
+    fun refreshInvoiceStatus(
+        @PathVariable id: UUID
+    ): ResponseEntity<InvoiceStatusDetail> {
+        logger.info("Refreshing status for invoice: $id")
+
+        val statusDetail = invoiceStatusService.refreshStatus(id)
+
+        return ResponseEntity.ok(statusDetail)
     }
 
     /**
